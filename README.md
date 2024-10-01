@@ -27,7 +27,6 @@ Configuração do GitHub Actions
 A automação no GitHub Actions foi configurada para rodar automaticamente todos os dias à meia-noite (UTC), utilizando o arquivo newman.yml dentro da pasta .github/workflows.
 
 Estrutura do Arquivo newman.yml
-yaml
 name: Run Newman Collection Daily
 
 on:
