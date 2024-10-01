@@ -33,11 +33,12 @@ jobs:
         name: resultado-bonito
         path: resultado-bonito.zip
 
-    # Commit e push do HTML para GitHub Pages
+    # Deploy do HTML para GitHub Pages
     - name: Deploy to GitHub Pages
       run: |
-        git fetch origin
+        git config --local user.email "luan-almeida100@hotmail.com"
+        git config --local user.name "luanfreitasqa"
         git checkout -b gh-pages || git checkout gh-pages
         git add resultado-bonito.html
         git commit -m "Deploy report to GitHub Pages"
-        git push origin gh-pages
+        git push origin gh-pages --force
