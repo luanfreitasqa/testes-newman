@@ -1,0 +1,35 @@
+name: Run Newman Collection Daily
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Executa a pipeline todos os dias à meia-noite (UTC)
+
+jobs:
+  newman-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checa o código do repositório
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    # Instala o Node.js
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    # Instala o Newman e o htmlextra reporter
+    - name: Install Newman and Reporter
+      run: npm install -g newman newman-reporter-htmlextra
+
+    # Executa a Collection com 50 iterações e gera o relatório em HTML
+    - name: Run Newman Collection
+      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado-bonito.html
+
+    # (Opcional) Adiciona o relatório gerado como artefato da pipeline
+    - name: Upload Newman Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: newman-report
+        path: resultado-bonito.html
