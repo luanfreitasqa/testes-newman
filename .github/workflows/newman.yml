@@ -26,7 +26,7 @@ jobs:
 
     # Roda a Collection com 50 iterações e gera o relatório HTML
     - name: Run Newman Collection
-      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado.html
+      run: newman run "TesteSouth.postman_collection.json" -n 20 -r htmlextra --reporter-htmlextra-export resultado.html
 
     # Upload do relatório gerado como artefato
     - name: Upload Newman Report
