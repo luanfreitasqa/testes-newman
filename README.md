@@ -1,6 +1,9 @@
 # Teste de API Automático com Postman, Newman e GitHub Actions
 Este repositório contém uma automação de testes de API utilizando Postman, Newman e GitHub Actions para rodar automaticamente os testes diariamente.
 
+Para verificar os testes e o HTML do dia anterior é:
+https://luanfreitasqa.github.io/testesouth/resultado-bonito.html
+
 Estrutura do Projeto
 TesteSouth.postman_collection.json: Arquivo da collection do Postman, que contém todos os endpoints e testes automatizados.
 .github/workflows/newman.yml: Arquivo de configuração do GitHub Actions que executa os testes com o Newman diariamente.
