@@ -1,7 +1,7 @@
 name: Run Newman Collection Daily
 on:
   schedule:
-    - cron: '15 16 * * *'  # Rodar todos os dias à meia-noite (UTC)
+    - cron: '01 18 * * *'  # Rodar todos os dias à meia-noite (UTC)
   workflow_dispatch: # Permite rodar manualmente
 
 jobs:
