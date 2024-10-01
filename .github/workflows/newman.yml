@@ -1,39 +1,40 @@
 name: Run Newman Collection Daily
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Roda todos os dias à meia-noite (UTC)
+    - cron: '0 0 * * *' # Roda todos os dias à meia-noite (UTC)
 
 jobs:
   newman-tests:
     runs-on: ubuntu-latest
 
     steps:
-    # Check out repository
+    # Verifica o código no repositório
     - name: Check out repository
       uses: actions/checkout@v3
 
-    # Set up Node.js
+    # Instala o Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    # Install Newman and Reporter
+    # Instala o Newman e o reporter htmlextra
     - name: Install Newman and Reporter
       run: npm install -g newman newman-reporter-htmlextra
 
-    # Run Newman Collection and generate the HTML report
+    # Roda a Collection e gera o relatório HTML
     - name: Run Newman Collection
-      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado.html
+      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado-bonito.html
 
-    # Deploy the report to GitHub Pages
-    - name: Deploy Report to GitHub Pages
+    # Commit e push do relatório gerado no branch `gh-pages`
+    - name: Push to GitHub Pages
       run: |
-        git config --local user.email "github-actions@github.com"
-        git config --local user.name "github-actions"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git checkout -b gh-pages
-        git add resultado.html
+        git add resultado-bonito.html
         git commit -m "Deploy report to GitHub Pages"
-        git push -f https://${{ secrets.GH_TOKEN }}@github.com/luanfreitasqa/testesouth.git gh-pages
+        git push -u origin gh-pages
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
