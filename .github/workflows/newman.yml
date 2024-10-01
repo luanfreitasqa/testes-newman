@@ -12,11 +12,11 @@ jobs:
     steps:
     # Verifica o código no repositório
     - name: Check out repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3  # Atualizado para a versão v3
 
     # Instala o Node.js
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v3  # Atualizado para a versão v3
       with:
         node-version: '14'
 
@@ -30,7 +30,7 @@ jobs:
 
     # Upload do relatório gerado como artefato
     - name: Upload Newman Report
-      uses: actions/upload-artifact@v3  # Atualize para v3
+      uses: actions/upload-artifact@v3  # Atualizado para a versão v3
       with:
         name: newman-report
-        path: resultado.html
+        path: resultado-bonito.html
