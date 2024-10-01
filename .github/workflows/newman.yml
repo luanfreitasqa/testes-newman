@@ -22,22 +22,22 @@ jobs:
       run: npm install -g newman newman-reporter-htmlextra
 
     - name: Run Newman Collection
-      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado.html
+      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado-bonito.html
 
-    - name: Create or switch to gh-pages branch
+    # Upload HTML as ZIP Artifact (mantém o ZIP)
+    - name: Zip and Upload report
+      run: zip -r resultado-bonito.zip resultado-bonito.html
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: resultado-bonito
+        path: resultado-bonito.zip
+
+    # Commit e push do HTML para GitHub Pages
+    - name: Deploy to GitHub Pages
       run: |
         git fetch origin
-        if git rev-parse --verify origin/gh-pages; then
-          git checkout gh-pages
-        else
-          git checkout --orphan gh-pages
-        fi
-        git reset --hard
-
-    - name: Deploy report to GitHub Pages
-      run: |
-        git config --local user.email "github-actions@github.com"
-        git config --local user.name "github-actions"
-        git add resultado.html
+        git checkout -b gh-pages || git checkout gh-pages
+        git add resultado-bonito.html
         git commit -m "Deploy report to GitHub Pages"
-        git push origin gh-pages --force
+        git push origin gh-pages
