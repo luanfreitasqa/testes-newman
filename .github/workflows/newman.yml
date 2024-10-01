@@ -1,6 +1,7 @@
 name: Run Newman Collection Daily
 
 on:
+  workflow_dispatch:  # Adiciona a opção de rodar manualmente
   schedule:
     - cron: '0 0 * * *'  # Rodar todos os dias à meia-noite (UTC)
 
@@ -32,4 +33,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: newman-report
-        path: resultado.html
+        path: resultado-bonito.html
