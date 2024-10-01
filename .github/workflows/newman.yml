@@ -1,36 +1,39 @@
 name: Run Newman Collection Daily
 
 on:
-  workflow_dispatch:  # Adiciona a opção de rodar manualmente
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'  # Rodar todos os dias à meia-noite (UTC)
+    - cron: '0 0 * * *'  # Roda todos os dias à meia-noite (UTC)
 
 jobs:
   newman-tests:
     runs-on: ubuntu-latest
 
     steps:
-    # Verifica o código no repositório
+    # Check out the repository
     - name: Check out repository
       uses: actions/checkout@v3
 
-    # Instala o Node.js (versão 16 ou superior)
+    # Set up Node.js (16 or superior)
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '16'  # Atualizado para versão 16
+        node-version: '16'
 
-    # Instala o Newman e o reporter htmlextra
+    # Install Newman and the htmlextra reporter
     - name: Install Newman and Reporter
       run: npm install -g newman newman-reporter-htmlextra
 
-    # Roda a Collection com 50 iterações e gera o relatório HTML
+    # Run the Newman Collection and generate the HTML report
     - name: Run Newman Collection
-      run: newman run "TesteSouth.postman_collection.json" -n 20 -r htmlextra --reporter-htmlextra-export resultado.html
+      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado-bonito.html
 
-    # Upload do relatório gerado como artefato
-    - name: Upload Newman Report
-      uses: actions/upload-artifact@v3
-      with:
-        name: newman-report
-        path: resultado.html
+    # Commit the report to the gh-pages branch
+    - name: Deploy Report to GitHub Pages
+      run: |
+        git config --local user.email "github-actions@github.com"
+        git config --local user.name "github-actions"
+        git checkout -b gh-pages
+        git add resultado-bonito.html
+        git commit -m "Deploy report to GitHub Pages"
+        git push -f origin gh-pages
