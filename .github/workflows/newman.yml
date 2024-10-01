@@ -1,40 +1,43 @@
 name: Run Newman Collection Daily
-
 on:
   schedule:
-    - cron: '0 0 * * *' # Roda todos os dias à meia-noite (UTC)
+    - cron: '0 0 * * *'  # Rodar todos os dias à meia-noite (UTC)
+  workflow_dispatch: # Permite rodar manualmente
 
 jobs:
   newman-tests:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write  # Dá permissão para o GitHub Actions escrever no repositório
     steps:
-    # Verifica o código no repositório
     - name: Check out repository
       uses: actions/checkout@v3
 
-    # Instala o Node.js
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '16'
 
-    # Instala o Newman e o reporter htmlextra
     - name: Install Newman and Reporter
       run: npm install -g newman newman-reporter-htmlextra
 
-    # Roda a Collection e gera o relatório HTML
     - name: Run Newman Collection
-      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado-bonito.html
+      run: newman run "TesteSouth.postman_collection.json" -n 50 -r htmlextra --reporter-htmlextra-export resultado.html
 
-    # Commit e push do relatório gerado no branch `gh-pages`
-    - name: Push to GitHub Pages
+    - name: Create or switch to gh-pages branch
       run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git checkout -b gh-pages
-        git add resultado-bonito.html
+        git fetch origin
+        if git rev-parse --verify origin/gh-pages; then
+          git checkout gh-pages
+        else
+          git checkout --orphan gh-pages
+        fi
+        git reset --hard
+
+    - name: Deploy report to GitHub Pages
+      run: |
+        git config --local user.email "github-actions@github.com"
+        git config --local user.name "github-actions"
+        git add resultado.html
         git commit -m "Deploy report to GitHub Pages"
-        git push -u origin gh-pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        git push origin gh-pages --force
