@@ -30,7 +30,7 @@ jobs:
 
     # Upload do relatório gerado como artefato
     - name: Upload Newman Report
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3  # Atualize para v3
       with:
         name: newman-report
-        path: resultado-bonito.html
+        path: resultado.html
